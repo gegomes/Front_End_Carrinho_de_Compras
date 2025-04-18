@@ -26,7 +26,7 @@ export default function CartPage() {
   const userId = 1;
   const router = useRouter();
 
-  const { carrinho, removerItem, mutate } = useCarrinho(userId); // ✅ pegando removerItem
+  const { carrinho, removerItem, mutate } = useCarrinho(userId);
   const { finalizarCompra } = useFinalizarCompra(userId);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -54,12 +54,21 @@ export default function CartPage() {
   };
 
   return (
-    <Container sx={{ py: 4, bgcolor: '#F5F5F5' }}>
-      <Typography variant="h4" gutterBottom>Meu Carrinho</Typography>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Meu Carrinho
+      </Typography>
 
-      <Box sx={{ display: 'flex', gap: 2 }}>
+      {/* Carrinho + Resumo */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 2
+        }}
+      >
         {/* Lista de Itens do Carrinho */}
-        <Box flex={1}>
+        <Box sx={{ flex: 1 }}>
           <Card variant="outlined">
             <CardHeader
               title="Produtos Loja Tudo Bonus"
@@ -70,7 +79,7 @@ export default function CartPage() {
             <CardContent sx={{ p: 2 }}>
               {carrinho.length ? (
                 carrinho.map(item => (
-                  <CartItem key={item.id} item={item} onRemove={removerItem} /> // ✅ agora usa removerItem
+                  <CartItem key={item.id} item={item} onRemove={removerItem} />
                 ))
               ) : (
                 <Typography color="text.secondary">Seu carrinho está vazio.</Typography>
@@ -80,7 +89,11 @@ export default function CartPage() {
         </Box>
 
         {/* Resumo da Compra */}
-        <Box width={300}>
+        <Box
+          sx={{
+            width: { xs: '100%', md: 320 }
+          }}
+        >
           <Card variant="outlined">
             <CardHeader title="Resumo da compra" sx={{ bgcolor: 'background.paper', px: 2, py: 1 }} />
             <Divider />
@@ -104,7 +117,12 @@ export default function CartPage() {
                 color="success"
                 fullWidth
                 startIcon={<ShoppingCartIcon />}
-                sx={{ borderRadius: '50px', textTransform: 'none', py: 1 }}
+                sx={{
+                  borderRadius: '50px',
+                  textTransform: 'none',
+                  py: 1,
+                  fontWeight: 'bold'
+                }}
                 onClick={handleCheckout}
               >
                 Comprar
@@ -116,8 +134,18 @@ export default function CartPage() {
 
       {/* Recomendações (Placeholder) */}
       <Box mt={6}>
-        <Typography variant="h6" gutterBottom>Recomendações para você</Typography>
-        <Paper variant="outlined" sx={{ p: 3, textAlign: 'center', bgcolor: 'background.paper' }}>
+        <Typography variant="h6" gutterBottom>
+          Recomendações para você
+        </Typography>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 3,
+            textAlign: 'center',
+            bgcolor: 'background.paper',
+            fontStyle: 'italic'
+          }}
+        >
           Em desenvolvimento… 🚧
         </Paper>
       </Box>
