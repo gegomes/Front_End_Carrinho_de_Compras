@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Box, Card, CardContent, Button, Typography,
-  Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField
+  Box,
+  Card,
+  CardContent,
+  Button,
+  Typography
 } from '@mui/material';
 import { useProdutos, useAdicionarAoCarrinho } from '@/utils/hooks';
+import ModalComprarProduto from '@/components/ModalComprarProduto';
+import { useSnackbar } from 'notistack';
 
 interface Produto {
   id: number;
@@ -13,12 +17,14 @@ interface Produto {
   descricao?: string;
   quantidade_estoque?: number;
   image_url?: string;
+  galeria?: string[];
 }
 
 export default function ProductCatalog() {
   const userId = 1;
   const { produtos } = useProdutos();
   const { adicionarItem } = useAdicionarAoCarrinho(userId);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null);
   const [quantidade, setQuantidade] = useState(1);
@@ -29,9 +35,19 @@ export default function ProductCatalog() {
   };
 
   const handleConfirmarCompra = async () => {
-    if (selectedProduto) {
+    if (!selectedProduto || quantidade < 1) {
+      enqueueSnackbar('Quantidade inválida', { variant: 'warning' });
+      return;
+    }
+
+    try {
       await adicionarItem(selectedProduto.id, quantidade);
+      enqueueSnackbar('Produto adicionado ao carrinho!', { variant: 'success' });
       setSelectedProduto(null);
+    } catch (error: any) {
+      const mensagem = error?.response?.data?.message || 'Erro ao adicionar produto ao carrinho';
+      enqueueSnackbar(mensagem, { variant: 'error' });
+      console.error(error);
     }
   };
 
@@ -50,12 +66,15 @@ export default function ProductCatalog() {
           <Card
             key={produto.id}
             sx={{
-              width: 220,
-              borderRadius: 2,
+              width: 240,
+              borderRadius: 3,
               boxShadow: 2,
-              transition: '0.3s',
-              '&:hover': { transform: 'translateY(-5px)', boxShadow: 4 },
-              backgroundColor: '#fff',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-6px)',
+                boxShadow: 4
+              },
+              backgroundColor: '#fff'
             }}
           >
             {produto.image_url && (
@@ -65,36 +84,50 @@ export default function ProductCatalog() {
                 alt={produto.nome}
                 sx={{
                   width: '100%',
-                  height: 180,
+                  height: 200,
                   objectFit: 'contain',
-                  borderTopLeftRadius: 8,
-                  borderTopRightRadius: 8,
-                  backgroundColor: '#f6f6f6',
+                  bgcolor: '#f6f6f6',
+                  borderTopLeftRadius: 12,
+                  borderTopRightRadius: 12,
+                  p: 1
                 }}
               />
             )}
-            <CardContent sx={{ p: 2 }}>
+
+            <CardContent sx={{ px: 2.5, py: 2 }}>
               <Typography
-                variant="body1"
+                variant="subtitle1"
                 fontWeight="bold"
-                gutterBottom
                 sx={{ minHeight: 48 }}
+                gutterBottom
               >
                 {produto.nome}
               </Typography>
               <Typography
-                variant="body2"
-                color="success.main"
+                variant="body1"
                 fontWeight="bold"
-                gutterBottom
+                color="success.main"
               >
                 R$ {produto.preco.toFixed(2)}
               </Typography>
+              <Typography
+                variant="caption"
+                color="success.main"
+                display="block"
+                mb={1}
+              >
+                Frete grátis
+              </Typography>
               <Button
-                variant="contained"
                 fullWidth
+                variant="contained"
                 onClick={() => handleComprar(produto)}
-                sx={{ mt: 1, textTransform: 'none', borderRadius: 50 }}
+                sx={{
+                  textTransform: 'none',
+                  borderRadius: 2,
+                  fontWeight: 'bold',
+                  py: 1
+                }}
               >
                 Comprar
               </Button>
@@ -103,38 +136,14 @@ export default function ProductCatalog() {
         ))}
       </Box>
 
-      <Dialog open={!!selectedProduto} onClose={() => setSelectedProduto(null)}>
-        <DialogTitle>Comprar Produto</DialogTitle>
-        <DialogContent dividers>
-          {selectedProduto?.image_url && (
-            <Box
-              component="img"
-              src={selectedProduto.image_url}
-              alt={selectedProduto.nome}
-              sx={{ width: '100%', height: 200, objectFit: 'contain', mb: 2 }}
-            />
-          )}
-          <Typography variant="h6">{selectedProduto?.nome}</Typography>
-          <Typography>Descrição: {selectedProduto?.descricao || 'Sem descrição'}</Typography>
-          <Typography>Estoque: {selectedProduto?.quantidade_estoque ?? 'N/A'}</Typography>
-
-          <TextField
-            label="Quantidade"
-            type="number"
-            fullWidth
-            margin="normal"
-            value={quantidade}
-            onChange={(e) => setQuantidade(Number(e.target.value))}
-            inputProps={{ min: 1, max: selectedProduto?.quantidade_estoque ?? 99 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSelectedProduto(null)} color="inherit">Cancelar</Button>
-          <Button onClick={handleConfirmarCompra} variant="contained" color="primary">
-            Adicionar ao Carrinho
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ModalComprarProduto
+        open={!!selectedProduto}
+        produto={selectedProduto}
+        quantidade={quantidade}
+        onClose={() => setSelectedProduto(null)}
+        onChangeQuantidade={(val) => setQuantidade(Math.max(1, val))}
+        onConfirm={handleConfirmarCompra}
+      />
     </>
   );
 }

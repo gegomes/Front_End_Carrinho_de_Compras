@@ -1,23 +1,23 @@
 // theme.ts
-import { createTheme } from '@mui/material';
+import { createTheme } from '@mui/material'
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3366FF',        // azul forte do header
+      main: '#3366FF',
       light: '#5C8CFF',
       contrastText: '#ffffff'
     },
     secondary: {
-      main: '#FFB800',        // amarelo para destaques
+      main: '#FFB800',
       contrastText: '#000'
     },
     success: {
-      main: '#00C853'         // verde de “Frete grátis”
+      main: '#00C853'
     },
     background: {
-      default: '#F5F5F5',     // cinza claro por trás dos cards
-      paper: '#FFFFFF'        // branco dos cards
+      default: '#F5F5F5',
+      paper: '#FFFFFF'
     },
     text: {
       primary: '#212121',
@@ -25,7 +25,20 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif'
+    fontFamily: 'Inter, sans-serif',
+    fontSize: 13, // 🔹 base menor (padrao é 14)
+
+    h1: { fontSize: '2rem', fontWeight: 600 },
+    h2: { fontSize: '1.75rem', fontWeight: 600 },
+    h3: { fontSize: '1.5rem', fontWeight: 600 },
+    h4: { fontSize: '1.25rem', fontWeight: 500 },
+    h5: { fontSize: '1.1rem', fontWeight: 500 },
+    h6: { fontSize: '1rem', fontWeight: 500 },
+    subtitle1: { fontSize: '0.95rem' },
+    subtitle2: { fontSize: '0.85rem' },
+    body1: { fontSize: '0.9rem' },
+    body2: { fontSize: '0.8rem' },
+    button: { fontSize: '0.85rem', textTransform: 'none' }
   },
   components: {
     MuiAppBar: {
@@ -46,7 +59,7 @@ const theme = createTheme({
     MuiCardHeader: {
       styleOverrides: {
         root: {
-          backgroundColor: '#F0F4FF'  // leve azul de fundo no header do card
+          backgroundColor: '#F0F4FF'
         }
       }
     },
@@ -59,4 +72,5 @@ const theme = createTheme({
     }
   }
 })
-export default theme;
+
+export default theme

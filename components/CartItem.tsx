@@ -33,61 +33,79 @@ export default function CartItem({ item, onRemove }: Props) {
         variant="outlined"
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          position: 'relative',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          gap: 2,
           p: 2,
           mb: 2,
+          position: 'relative',
         }}
       >
+        {/* Imagem do produto */}
         {item.image_url ? (
           <CardMedia
             component="img"
             image={item.image_url}
             alt={item.produto}
-            sx={{ width: 120, height: 120, objectFit: 'contain', backgroundColor: '#f4f4f4' }}
+            sx={{
+              width: { xs: '100%', sm: 120 },
+              height: { xs: 180, sm: 120 },
+              objectFit: 'contain',
+              backgroundColor: '#f4f4f4',
+              borderRadius: 1
+            }}
           />
         ) : (
           <Box
             sx={{
-              width: 120,
-              height: 120,
+              width: { xs: '100%', sm: 120 },
+              height: { xs: 180, sm: 120 },
               backgroundColor: '#eee',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 12,
               color: '#888',
+              borderRadius: 1
             }}
           >
             Sem imagem
           </Box>
         )}
 
-        <CardContent sx={{ flex: 1 }}>
-          <Typography variant="subtitle1" fontWeight="bold">{item.produto}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Typography>
-          <Typography variant="body2">Qtd: <strong>{item.quantidade}</strong></Typography>
-          <Typography variant="body2" fontWeight="bold">
-            Subtotal: R$ {item.subtotal.toFixed(2)}
-          </Typography>
-        </CardContent>
+        {/* Conteúdo */}
+        <Box sx={{ flex: 1 }}>
+          <CardContent sx={{ px: 0, pb: '0 !important' }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {item.produto}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </Typography>
+            <Typography variant="body2" mt={1}>
+              Qtd: <strong>{item.quantidade}</strong>
+            </Typography>
+            <Typography variant="body2" fontWeight="bold" color="error.main">
+              Subtotal: R$ {item.subtotal.toFixed(2)}
+            </Typography>
+          </CardContent>
+        </Box>
 
-        <Typography
-          variant="h6"
-          sx={{ position: 'absolute', top: 16, right: 50 }}
+        {/* Preço e botão */}
+        <Box
+          sx={{
+            alignSelf: { xs: 'flex-end', sm: 'center' },
+            textAlign: 'right',
+            mt: { xs: 1, sm: 0 }
+          }}
         >
-          R$ {item.preco.toFixed(2)}
-        </Typography>
-
-        <IconButton
-          color="error"
-          onClick={handleOpen}
-          sx={{ position: 'absolute', bottom: 16, right: 16 }}
-        >
-          <DeleteIcon />
-        </IconButton>
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            R$ {item.preco.toFixed(2)}
+          </Typography>
+          <IconButton color="error" onClick={handleOpen}>
+            <DeleteIcon />
+          </IconButton>
+        </Box>
       </Card>
 
       {/* Modal de confirmação */}
