@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function CartSummary({ total, onCheckout }: Props) {
-    console.log(total)
+
   return (
     <Card variant="outlined" sx={{ position: 'sticky', top: 16 }}>
       <CardContent>

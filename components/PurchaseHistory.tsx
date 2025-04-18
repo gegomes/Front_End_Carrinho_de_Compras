@@ -84,8 +84,8 @@ export default function PurchaseHistory({ purchases }: Props) {
   }
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+    <Box sx={{ px: { xs: 2, sm: 4, md: 6 } }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mb: 3 }}>
         <TextField
           placeholder="Buscar produtos..."
           variant="outlined"
@@ -130,7 +130,8 @@ export default function PurchaseHistory({ purchases }: Props) {
                 elevation={1}
                 sx={{
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  alignItems: { sm: 'center' },
                   justifyContent: 'space-between',
                   p: 2,
                   mb: 2,
@@ -142,10 +143,16 @@ export default function PurchaseHistory({ purchases }: Props) {
                   variant="square"
                   src={first.image_url || '/placeholder.png'}
                   alt={first.produto}
-                  sx={{ width: 80, height: 80, mr: 2, borderRadius: 2 }}
+                  sx={{
+                    width: { xs: '100%', sm: 80 },
+                    height: { xs: 180, sm: 80 },
+                    mb: { xs: 2, sm: 0 },
+                    borderRadius: 2,
+                    objectFit: 'cover'
+                  }}
                 />
 
-                <Box sx={{ flex: 1, pr: 2 }}>
+                <Box sx={{ flex: 1, pr: { sm: 2 } }}>
                   <Chip label="Entregue" color="success" size="small" sx={{ mb: 0.5 }} />
                   <Typography variant="subtitle1" fontWeight="bold">
                     Chegou no dia{' '}
@@ -179,17 +186,22 @@ export default function PurchaseHistory({ purchases }: Props) {
                   )}
                 </Box>
 
-                <Box sx={{ textAlign: 'right', minWidth: 160 }}>
+                <Box sx={{
+                  textAlign: { xs: 'center', sm: 'right' },
+                  width: { xs: '100%', sm: 'auto' },
+                  mt: { xs: 2, sm: 0 }
+                }}>
                   <Button
                     variant="contained"
                     color="success"
                     size="small"
-                    sx={{ m: 1 }}
+                    fullWidth={true}
+                    sx={{ mb: 1 }}
                     onClick={() => handleOpen(p)}
                   >
                     Ver compra
                   </Button>
-                  <Button variant="outlined" size="small">
+                  <Button variant="outlined" size="small" fullWidth={true}>
                     Comprar novamente
                   </Button>
                 </Box>
