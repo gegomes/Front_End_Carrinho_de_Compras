@@ -1,40 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-## Getting Started
+# Loja Tudo Bônus - Frontend do Carrinho de Compras
 
-First, run the development server:
+Este é o frontend da aplicação de carrinho de compras da Loja Tudo Bônus. Desenvolvido com React, Next.js e Material UI, o projeto permite que um usuário:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Visualize um catálogo de produtos com imagens.
+- Adicione itens ao carrinho com quantidade.
+- Visualize o carrinho com subtotal e total.
+- Finalize a compra com confirmação em modal.
+- Veja o histórico de compras com agrupamento por data.
+
+## Funcionalidades
+
+### 1. Catálogo de Produtos
+- Produtos são carregados via hook `useProdutos()`
+- Cada card possui imagem, nome, preço e botão "Comprar"
+- Ao clicar em comprar, abre-se um modal para informar a quantidade
+
+### 2. Carrinho
+- Listagem de produtos com imagem, nome, quantidade e subtotal
+- Total é calculado com base no subtotal dos itens
+- Botão para finalizar compra abre modal de confirmação
+
+### 3. Finalização de Compra
+- Envia uma requisição POST para `/carrinho/:userId/finalizar`
+- Limpa o carrinho e redireciona para a dashboard
+
+### 4. Histórico de Compras
+- Utiliza hook `useHistory(userId)`
+- Agrupa por data (Hoje, Este mês, Todas)
+- Lista produtos comprados com opções de ver detalhes ou comprar novamente
+
+## Como testar com múltiplos usuários (sem autenticação)
+
+Atualmente, a aplicação não tem sistema de login. Para testar o comportamento com diferentes usuários:
+
+1. **Altere o `userId` manualmente no frontend:**
+
+No topo dos arquivos `pages/cart.tsx`, `pages/index.tsx`, `components/ProductCatalog.tsx` e similares, altere:
+```tsx
+const userId = 1 // Altere para 2, 3, 4, etc.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Abra múltiplas abas com valores diferentes:**
+- Clone o projeto e rode em duas portas (ex: 3000 e 3001), alterando o `userId` em cada um
+- Isso simula sessões de usuários diferentes
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+3. **Valide que os dados do carrinho não se misturam entre `user_id`s**
+- Cada requisição do frontend vai para rotas com `userId` embutido
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Exemplo de chamada para adicionar item:
+```ts
+POST /carrinho/1/item
+{
+  "produto_id": 3,
+  "quantidade": 2
+}
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Instalação e Execução
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/loja-tudobonus-frontend.git
+cd loja-tudobonus-frontend
+```
 
-## Learn More
+2. Instale as dependências:
+```bash
+yarn install
+# ou npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+3. Inicie o servidor de desenvolvimento:
+```bash
+yarn dev
+# ou npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Acesse: [http://localhost:3000](http://localhost:3000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Estrutura de Pastas
+```
+/pages
+  /index.tsx         -> Catálogo
+  /cart.tsx          -> Carrinho
+/components
+  CartItem.tsx       -> Card de item no carrinho
+  ProductCatalog.tsx -> Lista os produtos
+/utils
+  /hooks.ts          -> Hooks personalizados de produtos, carrinho, compras
+  /api.ts            -> Instância Axios
+```
 
-## Deploy on Vercel
+## API Backend
+Certifique-se de que a API esteja rodando em:
+```http
+http://localhost:8000
+```
+Com as rotas:
+- `GET /produtos`
+- `GET /carrinho/:userId`
+- `POST /carrinho/:userId/item`
+- `DELETE /carrinho/:userId/item/:id`
+- `POST /carrinho/:userId/finalizar`
+- `GET /compras/:userId`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+> Este projeto é uma implementação demonstrativa e pode ser adaptado para uso com autenticação JWT, contexto global de usuário, entre outros aprimoramentos.
