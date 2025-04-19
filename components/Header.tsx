@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, IconButton, Badge, Link } from '@mui/material';
+import { AppBar, Toolbar, Box, IconButton, Badge, Link } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCarrinho } from '@/utils/hooks';
 import NextLink from 'next/link';
