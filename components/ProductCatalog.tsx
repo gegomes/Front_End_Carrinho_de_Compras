@@ -20,6 +20,14 @@ interface Produto {
   galeria?: string[];
 }
 
+interface AxiosErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export default function ProductCatalog() {
   const userId = 1;
   const { produtos } = useProdutos();
@@ -44,8 +52,14 @@ export default function ProductCatalog() {
       await adicionarItem(selectedProduto.id, quantidade);
       enqueueSnackbar('Produto adicionado ao carrinho!', { variant: 'success' });
       setSelectedProduto(null);
-    } catch (error: any) {
-      const mensagem = error?.response?.data?.message || 'Erro ao adicionar produto ao carrinho';
+    } catch (error: unknown) {
+      let mensagem = 'Erro ao adicionar produto ao carrinho';
+
+      const axiosError = error as AxiosErrorResponse;
+      if (axiosError.response?.data?.message) {
+        mensagem = axiosError.response.data.message;
+      }
+
       enqueueSnackbar(mensagem, { variant: 'error' });
       console.error(error);
     }
