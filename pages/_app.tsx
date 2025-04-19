@@ -1,12 +1,10 @@
-// pages/_app.tsx
-import React from 'react'
-import { AppProps } from 'next/app'
-import { SnackbarProvider } from 'notistack'
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material'
-import Header from '../components/Header'
-import theme from '@/utils/theme'
-
-
+// _app.tsx
+import React from 'react';
+import { AppProps } from 'next/app';
+import { SnackbarProvider } from 'notistack';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import Header from '../components/Header';
+import theme from '@/utils/theme';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -20,5 +18,5 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </SnackbarProvider>
     </ThemeProvider>
-  )
+  );
 }

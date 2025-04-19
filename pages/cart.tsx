@@ -26,7 +26,7 @@ export default function CartPage() {
   const userId = 1;
   const router = useRouter();
 
-  const { carrinho, removerItem, mutate } = useCarrinho(userId);
+  const { carrinho, removerItem } = useCarrinho(userId);
   const { finalizarCompra } = useFinalizarCompra(userId);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
