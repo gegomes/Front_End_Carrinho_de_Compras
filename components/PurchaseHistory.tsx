@@ -20,7 +20,8 @@ import {
   ListItemText
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Purchase } from '../utils/hooks';
+import { useRouter } from 'next/router';
+import { useAdicionarAoCarrinho, Purchase } from '../utils/hooks';
 
 interface Props {
   purchases: Purchase[];
@@ -28,6 +29,10 @@ interface Props {
 
 export default function PurchaseHistory({ purchases }: Props) {
   const theme = useTheme();
+  const router = useRouter();
+  const userId = 1;
+  const { adicionarItem } = useAdicionarAoCarrinho(userId);
+
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('Todas');
   const [open, setOpen] = useState(false);
@@ -38,6 +43,13 @@ export default function PurchaseHistory({ purchases }: Props) {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
+
+  const handleComprarNovamente = async (p: Purchase) => {
+    for (const item of p.itens) {
+      await adicionarItem(item.id, item.quantidade);
+    }
+    router.push('/');
+  };
 
   const searched = useMemo(
     () =>
@@ -201,7 +213,12 @@ export default function PurchaseHistory({ purchases }: Props) {
                   >
                     Ver compra
                   </Button>
-                  <Button variant="outlined" size="small" fullWidth={true}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    fullWidth={true}
+                    onClick={() => handleComprarNovamente(p)}
+                  >
                     Comprar novamente
                   </Button>
                 </Box>
